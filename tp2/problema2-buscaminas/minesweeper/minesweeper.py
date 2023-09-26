@@ -102,7 +102,8 @@ class Minesweeper():
 class Sentence():
     """
     Clase que representa una sentencia lógica sobre el juego del Buscaminas.
-    Una sentencia consta de un conjunto de celdas del tablero y el número de minas en esas celdas.
+    Una sentencia consta de un conjunto de celdas del tablero 
+    y el número de minas en esas celdas.
     """
 
     def __init__(self, cells, count):
@@ -128,9 +129,11 @@ class Sentence():
         Returns:
             set: Conjunto de celdas conocidas como minas.
         """
-        #solo puedo estar seguro si las celdas contienen minas si la sentencia contiene el mismo numero de celdas que el contador de minas
+        #solo puedo estar seguro si las celdas contienen minas 
+        # si la sentencia contiene el mismo numero de celdas que el contador de minas
         #EJ: A, B, C = 1
-        #No puedo afirmar nada dado que cualquiera de las 3 podria contener la mina, por lo que devuelvo un set vacio
+        #No puedo afirmar nada dado que cualquiera de las 3 podria contener la mina, 
+        # por lo que devuelvo un set vacio
         if len(self.cells) == self.count:
             return self.cells.copy()
         return set()
@@ -149,10 +152,11 @@ class Sentence():
 
     def mark_mine(self, cell):
         """
-        Actualiza la representación interna del conocimiento dado que puedo afirmar que una celda es una mina.
+        Actualiza la representación interna del conocimiento 
+        dado que puedo afirmar que una celda es una mina.
 
         Args:
-            cell (tuple): Coordenadas (fila, columna) de la celda conocida como mina.
+            cell (tupla): Coordenadas (fila, columna) de la celda conocida como mina.
         """
         if cell in self.cells:
             self.cells.remove(cell)
@@ -160,10 +164,11 @@ class Sentence():
 
     def mark_safe(self, cell):
         """
-        Actualiza la representación interna del conocimiento dado que puedo afirmar que una celda es segura.
+        Actualiza la representación interna del conocimiento 
+        dado que puedo afirmar que una celda es segura.
 
         Args:
-            cell (tuple): Coordenadas (fila, columna) de la celda conocida como segura.
+            cell (tupla): Coordenadas (fila, columna) de la celda conocida como segura.
         """
         if cell in self.cells:
             self.cells.remove(cell)
@@ -188,7 +193,7 @@ class MinesweeperAI():
             moves_made (set): Conjunto de celdas donde se ha hecho un movimiento.
             mines (set): Conjunto de celdas conocidas como minas.
             safes (set): Conjunto de celdas conocidas como seguras.
-            knowledge (list): Lista de sentencias lógicas sobre el juego conocidas como verdaderas.
+            knowledge (list): Lista de sentencias lógicas sobre el juego.
         """
         
         # Set initial height and width
@@ -210,7 +215,7 @@ class MinesweeperAI():
         Marca una celda como mina y actualiza todo el conocimiento.
 
         Args:
-            cell (tuple): Coordenadas (fila, columna) de la celda conocida como mina.
+            cell (tupla): Coordenadas (fila, columna) de la celda conocida como mina.
         """
         self.mines.add(cell)
         for sentence in self.knowledge:
@@ -222,7 +227,7 @@ class MinesweeperAI():
         Marca una celda como segura y actualiza todo el conocimiento.
 
         Args:
-            cell (tuple): Coordenadas (fila, columna) de la celda conocida como segura.
+            cell (tupla): Coordenadas (fila, columna) de la celda conocida como segura.
         """
         self.safes.add(cell)
         for sentence in self.knowledge:
@@ -255,9 +260,7 @@ class MinesweeperAI():
        
         # agrega una nueva sentencia a la base de conocimientos de la IA
         # basado en el valor de "cell" y "count"
-        
         nearby_cells = []
-        
         # obtengo todas las celdas alrededor de la celda a la que me movi 
         # (sin salir de los extremos del tablero)
         for i in range(max(0, cell[0] - 1), min(self.width, cell[0] + 2)):
@@ -268,20 +271,19 @@ class MinesweeperAI():
                 if (i, j) == cell:
                     continue
                 
-                #aca si agregas la condicion de self.mines falla la IA jugando y no entiendo el porque
-                if current_cell != cell and current_cell not in self.safes:
+                if current_cell not in self.safes:
                     nearby_cells.append(current_cell)
 
-        #genero una sentencia nueva la cual tenga todas las celdas alrededor de la cual me movi, con el contador de minas
+        # genero una sentencia nueva la cual tenga 
+        # todas las celdas alrededor de la cual me movi, con el contador de minas
         generated_sentence = Sentence(nearby_cells,count)   
         
-        #agrego la sentencia la base de conocimiento
+        # agrego la sentencia la base de conocimiento
         self.knowledge.append(generated_sentence)
         
         
         # marca celdas adicionales como seguras o como minas
         # si se puede concluir basándose en la base de conocimientos de la IA
-        
         for sentence in self.knowledge:
             
             if len(sentence.known_mines()) > 0:
@@ -298,10 +300,8 @@ class MinesweeperAI():
         # genero nuevas sentencias
         # si pueden inferirse del conocimiento existente
         new_sentences = []
-        
         #obtengo 2 sentencias a comparar de mi base de conocimientos
         for subset_sentence in self.knowledge:
-            
             for main_sentence in self.knowledge:
                 
                 if subset_sentence == main_sentence:
@@ -316,13 +316,13 @@ class MinesweeperAI():
                     new_sentence = Sentence(new_sentence_cells, new_sentence_count)
                     
                     #verifico que esa sentencia no se encuentre ya
-                    # en la base de conocimiento y la agrego
+                    # en la base de conocimiento y la agrego a mi nuevo conocimiento
                     if new_sentence not in self.knowledge:
                         new_sentences.append(new_sentence)
         
         
         # Vuelvo a verificar si puedo marcar celdas como seguras o como minas 
-        # en base a las nuevas sentencias y las agrego a mi base de conocimiento
+        # en base a las nuevas sentencias y las agrego a mi base de conocimiento principal
         
         for sentence in new_sentences:
             
@@ -365,11 +365,11 @@ class MinesweeperAI():
         Devuelve un movimiento aleatorio para hacer en el tablero del Buscaminas.
 
         Returns:
-            tupla: Coordenadas del movimiento aleatorio o None si no hay movimientos disponibles.
+            tupla: Coordenadas del movimiento aleatorio o None si no hay movimientos.
         """
         cells = []
         
-        #Calcula todos los movimientos aleatorios posibles y luego elige uno con la libreria random
+        #Calcula todos los movimientos aleatorios posibles y luego elige uno.
         for i in range(self.height):
             for j in range(self.width):
                 cell = (i, j)
