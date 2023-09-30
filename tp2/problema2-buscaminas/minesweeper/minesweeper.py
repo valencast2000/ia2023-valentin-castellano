@@ -220,7 +220,7 @@ class MinesweeperAI():
         self.mines.add(cell)
         for sentence in self.knowledge:
             sentence.mark_mine(cell)
-        print("mina encontrada en " + str(cell[0]+1) + str(cell[1]+1))
+        #print("mina encontrada en " + str(cell[0]+1) + str(cell[1]+1))
 
     def mark_safe(self, cell):
         """
