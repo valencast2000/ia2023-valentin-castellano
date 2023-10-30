@@ -87,7 +87,10 @@ def main():
 def shortest_path(source, target):
     # Inicializar la frontera con el nodo de origen
     start = Node(state=source, parent=None, action=None)
+    
+    #frontier = StackFrontier()
     frontier = QueueFrontier()
+    
     frontier.add(start)
 
     # Inicializar un conjunto para realizar un seguimiento de los nodos explorados
